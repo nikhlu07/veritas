@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node server.js",
     "setup:hedera": "ts-node src/scripts/setup-hedera.ts",
     "test:hedera": "ts-node src/scripts/test-hedera-utils.ts",
     "create-topic": "node scripts/create-topic.js",
