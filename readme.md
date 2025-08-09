@@ -1,7 +1,5 @@
 # Veritas - Blockchain Product Verification System
 
-![Veritas Logo](./veritas-frontend/public/logo.svg)
-
 A comprehensive product authenticity verification system built on the Hedera blockchain network. Veritas enables businesses to create tamper-proof product records and allows consumers to instantly verify product authenticity through QR codes.
 
 ## 🌟 Features
