@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./veritas-backend
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - NODE_ENV=production
+      - HEDERA_ACCOUNT_ID=0.0.6535104-nvsjj
+      - HEDERA_PRIVATE_KEY=e36ceff57437de411a773a7e03078947e3164c93c1e828a65810668b48dd5182
+      - HEDERA_NETWORK=testnet
+      - HEDERA_TOPIC_ID=0.0.6535283
+      - FRONTEND_URL=http://localhost:3000
+    networks:
+      - veritas-network
+
+  frontend:
+    build:
+      context: ./veritas-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:3002
+      - NEXT_PUBLIC_APP_ENV=production
+      - HEDERA_ACCOUNT_ID=0.0.6535104-nvsjj
+      - HEDERA_PRIVATE_KEY=e36ceff57437de411a773a7e03078947e3164c93c1e828a65810668b48dd5182
+      - HEDERA_NETWORK=testnet
+      - HEDERA_TOPIC_ID=0.0.6535283
+    depends_on:
+      - backend
+    networks:
+      - veritas-network
+
+networks:
+  veritas-network:
+    driver: bridge

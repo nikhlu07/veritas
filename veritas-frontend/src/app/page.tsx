@@ -18,27 +18,27 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <img 
-                src="/logo.svg" 
-                alt="Veritas Logo" 
+              <img
+                src="/logo.svg"
+                alt="Veritas Logo"
                 className="w-8 h-8"
               />
               <span className="text-xl font-bold text-slate-900">Veritas</span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <button 
+              <button
                 onClick={() => scrollToSection('how-it-works')}
                 className="text-slate-600 hover:text-slate-900 font-medium transition-colors"
               >
                 How It Works
               </button>
-              <button 
+              <button
                 onClick={() => scrollToSection('use-cases')}
                 className="text-slate-600 hover:text-slate-900 font-medium transition-colors"
               >
                 Use Cases
               </button>
-              <Link 
+              <Link
                 href="/verify"
                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded transition-colors"
               >
@@ -46,7 +46,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="md:hidden">
-              <Link 
+              <Link
                 href="/verify"
                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 text-sm rounded transition-colors"
               >
@@ -82,17 +82,17 @@ export default function Home() {
               we ensure every product claim is authentic and verifiable.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link 
-                href="/submit"
+              <Link
+                href="/demo"
                 className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-center"
               >
-                Submit a Claim
+                View Live Demo
               </Link>
               <Link
-                href="/verify"
+                href="/verify/COFFEE-2024-1001"
                 className="border-2 border-slate-400 text-slate-300 hover:text-white hover:border-white px-8 py-3 text-lg font-semibold rounded-lg bg-transparent backdrop-blur-sm transition-all duration-300 text-center"
               >
-                Verify a Product
+                Try Verification
               </Link>
             </div>
           </div>
@@ -186,11 +186,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6">
-              The Trust Gap in 
+              The Trust Gap in
               <span className="block text-emerald-600">Sustainability</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Consumers have no way to verify claims about ethical labor, recycled materials, 
+              Consumers have no way to verify claims about ethical labor, recycled materials,
               or organic sourcing. The result? Widespread greenwashing and broken trust.
             </p>
           </div>
@@ -214,7 +214,7 @@ export default function Home() {
                   <h3 className="text-xl font-bold text-slate-900">Unverified Claim</h3>
                 </div>
                 <p className="text-slate-600 text-center">
-                  Claims without verification are susceptible to fraud and misinformation. 
+                  Claims without verification are susceptible to fraud and misinformation.
                   Consumers can't trust what they're buying.
                 </p>
               </div>
@@ -239,7 +239,7 @@ export default function Home() {
                   <h3 className="text-xl font-bold text-slate-900">Veritas Verified</h3>
                 </div>
                 <p className="text-slate-600 text-center">
-                  Claims recorded on the Hedera blockchain are immutable and publicly 
+                  Claims recorded on the Hedera blockchain are immutable and publicly
                   verifiable. Trust through transparency.
                 </p>
               </div>
@@ -268,7 +268,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-4">1. Submit Claims</h3>
               <p className="text-slate-600">
-                Brands submit product information and sustainability claims to our platform, 
+                Brands submit product information and sustainability claims to our platform,
                 providing evidence and documentation.
               </p>
             </div>
@@ -280,7 +280,7 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-4">2. Blockchain Recording</h3>
               <p className="text-slate-600">
-                Claims are recorded on the Hedera blockchain, creating an immutable and 
+                Claims are recorded on the Hedera blockchain, creating an immutable and
                 transparent record that cannot be altered.
               </p>
             </div>
@@ -292,14 +292,14 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-4">3. Instant Verification</h3>
               <p className="text-slate-600">
-                Consumers scan QR codes or search batch IDs to instantly verify 
+                Consumers scan QR codes or search batch IDs to instantly verify
                 product authenticity and sustainability claims.
               </p>
             </div>
           </div>
 
           <div className="text-center mt-12">
-            <Link 
+            <Link
               href="/submit"
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
@@ -381,17 +381,17 @@ export default function Home() {
             Ready to Build Trust?
           </h2>
           <p className="text-xl text-emerald-100 mb-10 max-w-2xl mx-auto">
-            Join the transparency revolution. Start verifying your products today 
+            Join the transparency revolution. Start verifying your products today
             and give your customers the confidence they deserve.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
+            <Link
               href="/submit"
               className="bg-white text-emerald-600 px-8 py-3 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               Submit Your First Product
             </Link>
-            <Link 
+            <Link
               href="/verify"
               className="border-2 border-white text-white hover:bg-white hover:text-emerald-600 px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300"
             >

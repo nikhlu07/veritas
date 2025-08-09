@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from 'react-hot-toast';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { NetworkStatus } from '@/components/ui/ErrorComponents';
+import { BackendStatus } from '@/components/ui/BackendStatus';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -113,6 +114,7 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <NetworkStatus />
+          <BackendStatus />
           {children}
         </ErrorBoundary>
         <Toaster

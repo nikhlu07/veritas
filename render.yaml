@@ -1,0 +1,45 @@
+services:
+  # Backend Service
+  - type: web
+    name: veritas-backend
+    env: node
+    buildCommand: cd veritas-backend && npm install
+    startCommand: cd veritas-backend && npm start
+    envVars:
+      - key: PORT
+        value: 3002
+      - key: NODE_ENV
+        value: production
+      - key: HEDERA_ACCOUNT_ID
+        value: 0.0.6535104-nvsjj
+      - key: HEDERA_PRIVATE_KEY
+        value: e36ceff57437de411a773a7e03078947e3164c93c1e828a65810668b48dd5182
+      - key: HEDERA_NETWORK
+        value: testnet
+      - key: HEDERA_TOPIC_ID
+        value: 0.0.6535283
+
+  # Frontend Service  
+  - type: web
+    name: veritas-frontend
+    env: node
+    buildCommand: cd veritas-frontend && npm install && npm run build
+    startCommand: cd veritas-frontend && npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: veritas-backend
+          property: host
+      - key: NEXT_PUBLIC_APP_ENV
+        value: production
+      - key: NEXT_PUBLIC_FALLBACK_MODE
+        value: true
+      - key: HEDERA_ACCOUNT_ID
+        value: 0.0.6535104-nvsjj
+      - key: HEDERA_PRIVATE_KEY
+        value: e36ceff57437de411a773a7e03078947e3164c93c1e828a65810668b48dd5182
+      - key: HEDERA_NETWORK
+        value: testnet
+      - key: HEDERA_TOPIC_ID
+        value: 0.0.6535283
