@@ -1,0 +1,26 @@
+{
+  "name": "veritas-demo-setup",
+  "version": "1.0.0",
+  "description": "Demo products setup for Veritas Hedera HCS integration",
+  "main": "create-demo-products.js",
+  "scripts": {
+    "create-demos": "node create-demo-via-api.js",
+    "create-demos-hcs": "node create-demo-products.js",
+    "test": "node test-demo-flow.js"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "^2.49.0",
+    "axios": "^1.11.0",
+    "dotenv": "^16.0.0",
+    "qrcode": "^1.5.3"
+  },
+  "keywords": [
+    "hedera",
+    "hcs",
+    "blockchain",
+    "verification",
+    "demo"
+  ],
+  "author": "Veritas Team",
+  "license": "MIT"
+}
