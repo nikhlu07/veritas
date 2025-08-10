@@ -10,7 +10,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 
-[🚀 Live Demo](https://veritas-app.vercel.app) • [📖 Documentation](./docs) • [🎥 Demo Video](https://youtube.com/demo) • [🧪 Try It Now](https://veritas-app.vercel.app/verify)
+[🚀 Live Demo](https://veritas-tau.vercel.app/) • [📖 Documentation](./docs) • [🎥 Demo Video](https://youtube.com/demo) • [🧪 Try It Now](https://veritas-tau.vercel.app/demo)
 
 </div>
 
