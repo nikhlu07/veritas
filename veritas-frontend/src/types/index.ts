@@ -39,7 +39,7 @@ export interface CreateProductRequest {
   product_name: string;
   supplier_name: string;
   description?: string;
-  claims?: CreateClaimRequest[];
+  claims: CreateClaimRequest[];
 }
 
 export interface CreateClaimRequest {
@@ -48,12 +48,37 @@ export interface CreateClaimRequest {
 }
 
 export interface CreateProductResponse {
-  success: boolean;
-  product: Product;
-  claims: Claim[];
-  qr_code: QRCodeData;
-  hcs_results: HCSResult[];
-  timestamp: string;
+  product: {
+    id: number;
+    batch_id: string;
+    product_name: string;
+    supplier_name: string;
+    description: string;
+    created_at: string;
+  };
+  claims: {
+    id: number;
+    product_id: number;
+    claim_type: string;
+    description: string;
+    hcs_transaction_id: string;
+    created_at: string;
+  }[];
+  qr_code: {
+    batchId: string;
+    verificationData: {
+      batch_id: string;
+      verification_url: string;
+    };
+  };
+  hcs_results: {
+    type: string;
+    success: boolean;
+    data: {
+      transactionId: string;
+      topicId: string;
+    };
+  }[];
 }
 
 // QR Code Types
@@ -85,11 +110,32 @@ export interface HCSTransaction {
 export interface VerificationResponse {
   success: boolean;
   data: {
-    product: Product;
-    claims: Claim[];
-    qr_code: QRCodeData;
+    product: {
+      id: number;
+      product_name: string;
+      supplier_name: string;
+      batch_id: string;
+      description: string;
+      created_at: string;
+    };
+    claims: {
+      id: number;
+      product_id: number;
+      claim_type: string;
+      description: string;
+      hcs_transaction_id: string;
+      created_at: string;
+    }[];
+    qr_code: {
+      batchId: string;
+      verificationData: {
+        batch_id: string;
+        verification_url: string;
+      };
+    };
     summary: {
       total_claims: number;
+      verified_claims: number;
       claim_types: string[];
       has_hcs_data: boolean;
     };
