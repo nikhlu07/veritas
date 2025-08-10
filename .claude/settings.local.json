@@ -10,7 +10,8 @@
       "WebFetch(domain:veritas-tau.vercel.app)",
       "Bash(npm run build:*)",
       "Bash(npm run dev:*)",
-      "Bash(npx next dev:*)"
+      "Bash(npx next dev:*)",
+      "Bash(git pull:*)"
     ],
     "deny": []
   }
