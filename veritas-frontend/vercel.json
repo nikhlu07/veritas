@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "HEDERA_ACCOUNT_ID": "@hedera_account_id",
+    "HEDERA_PRIVATE_KEY": "@hedera_private_key",
+    "HEDERA_NETWORK": "@hedera_network",
+    "HEDERA_TOPIC_ID": "@hedera_topic_id"
+  }
+}
