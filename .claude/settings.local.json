@@ -6,7 +6,11 @@
       "Bash(git add:*)",
       "Bash(git push:*)",
       "Bash(git commit:*)",
-      "WebFetch(domain:veritas-backend-bt5bhtkxw-nikhhils07-gmailcoms-projects.vercel.app)"
+      "WebFetch(domain:veritas-backend-bt5bhtkxw-nikhhils07-gmailcoms-projects.vercel.app)",
+      "WebFetch(domain:veritas-tau.vercel.app)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx next dev:*)"
     ],
     "deny": []
   }

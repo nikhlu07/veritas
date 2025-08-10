@@ -48,7 +48,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
+        lufga: ["var(--font-lufga)", "Inter", "sans-serif"],
         sans: [
+          "var(--font-lufga)",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",

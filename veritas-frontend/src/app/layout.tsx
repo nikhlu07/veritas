@@ -1,19 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Toaster } from 'react-hot-toast';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { NetworkStatus } from '@/components/ui/ErrorComponents';
 import { BackendStatus } from '@/components/ui/BackendStatus';
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const lufga = Inter({
+  variable: "--font-lufga",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -101,7 +98,8 @@ export default function RootLayout({
         <meta name="theme-color" content="#2563eb" />
         <meta name="color-scheme" content="light" />
 
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -110,7 +108,7 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${lufga.variable} font-lufga antialiased`}
       >
         <ErrorBoundary>
           <NetworkStatus />
