@@ -1,7 +1,15 @@
 const { Pool } = require('pg');
 
-// Database configuration
-const dbConfig = {
+// Database configuration - prioritize DATABASE_URL for Vercel/production
+const dbConfig = process.env.DATABASE_URL ? {
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  },
+  max: parseInt(process.env.DB_MAX_CONNECTIONS) || 5,
+  idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT) || 30000,
+  connectionTimeoutMillis: parseInt(process.env.DB_CONNECTION_TIMEOUT) || 10000,
+} : {
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME || 'veritas',
