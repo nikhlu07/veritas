@@ -27,8 +27,12 @@ HEDERA_PRIVATE_KEY=e36ceff57437de411a773a7e03078947e3164c93c1e828a65810668b48dd5
 HEDERA_NETWORK=testnet
 HEDERA_TOPIC_ID=0.0.6535283
 
-# Database (replace PASSWORD with your Supabase password)
+# Database (replace YOUR_SUPABASE_PASSWORD with your actual password)
 DATABASE_URL=postgresql://postgres.yuyoxwwfeodcosghgkkn:YOUR_SUPABASE_PASSWORD@aws-0-ap-south-1.pooler.supabase.com:6543/postgres
+
+# Optional: Add these for extra configuration
+DB_MAX_CONNECTIONS=5
+DB_CONNECTION_TIMEOUT=10000
 
 # CORS (will update after frontend is deployed)
 FRONTEND_URL=https://localhost:3000
