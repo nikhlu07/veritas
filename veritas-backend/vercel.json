@@ -5,6 +5,8 @@
       "src": "server.js",
       "use": "@vercel/node",
       "config": {
+        "maxDuration": 30,
+        "memory": 512,
         "includeFiles": [
           "routes/**",
           "middleware/**",
@@ -24,11 +26,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "server.js": {
-      "maxDuration": 30,
-      "memory": 512
-    }
   }
 }
