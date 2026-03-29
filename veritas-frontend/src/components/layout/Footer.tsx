@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { 
-  Shield, 
   Mail, 
   Github, 
   Twitter, 
@@ -14,6 +13,7 @@ import {
   Lock,
   Globe
 } from 'lucide-react';
+import VeritasLogo from '@/components/ui/VeritasLogo';
 
 interface FooterLink {
   name: string;
@@ -98,14 +98,9 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl blur-lg opacity-30"></div>
-                <div className="relative bg-gradient-to-r from-green-600 to-blue-600 p-2.5 rounded-xl">
-                  <Shield className="w-8 h-8 text-white" />
-                </div>
-              </div>
+              <VeritasLogo size={40} />
               <div className="flex flex-col">
-                <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+                <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent">
                   Veritas
                 </span>
                 <span className="text-sm text-gray-500 -mt-1">

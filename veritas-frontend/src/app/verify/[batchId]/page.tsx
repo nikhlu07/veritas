@@ -7,9 +7,11 @@ import { Metadata } from 'next';
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 import { useParams, useRouter } from 'next/navigation';
-import { Shield, ArrowLeft, Search, RefreshCw, AlertTriangle, Home, Share2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Search, RefreshCw, AlertTriangle, Home, Share2, ExternalLink } from 'lucide-react';
 import VerificationResults from '@/components/verification/VerificationResults';
-import { verifyProduct, isValidBatchId } from '@/lib/api';
+import { verifyProduct } from '@/lib/api-with-fallback';
+import { isValidBatchId } from '@/lib/api';
+import VeritasLogo from '@/components/ui/VeritasLogo';
 import toast from 'react-hot-toast';
 import type { VerificationResponse } from '@/types';
 
@@ -140,13 +142,13 @@ export default function VerifyBatchPage() {
     try {
       // Validate batch ID format
       if (!isValidBatchId(id)) {
-        throw new Error('Invalid batch ID format. Expected format: VRT-YYYY-XXXXXX');
+        throw new Error('Invalid batch ID format — expected something like COFFEE-2024-1001');
       }
 
-      const response = await verifyProduct(id);
+      const result = await verifyProduct(id);
       
-      if (response.success && response.data) {
-        setVerificationData(response.data);
+      if (result.data) {
+        setVerificationData(result.data);
       } else {
         throw new Error('Product not found or verification failed');
       }
@@ -216,7 +218,7 @@ export default function VerifyBatchPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <Link href="/" className="flex items-center gap-3">
-                <Shield className="w-8 h-8 text-red-600" />
+                <VeritasLogo size={32} />
                 <h1 className="text-2xl font-bold text-gray-900">Veritas</h1>
               </Link>
               <nav className="flex items-center gap-8">
@@ -256,7 +258,7 @@ export default function VerifyBatchPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-3">
-              <Shield className="w-8 h-8 text-blue-600" />
+              <VeritasLogo size={32} />
               <h1 className="text-2xl font-bold text-gray-900">Veritas</h1>
             </Link>
             
@@ -322,11 +324,13 @@ export default function VerifyBatchPage() {
 
       {/* Main Content */}
       <main className="py-8">
-        <VerificationResults
-          data={verificationData}
-          loading={isLoading}
-          error={error}
-        />
+        {(isLoading || error || verificationData) && (
+          <VerificationResults
+            data={verificationData!}
+            loading={isLoading}
+            error={error ?? undefined}
+          />
+        )}
 
         {/* Error Actions */}
         {error && !isLoading && (

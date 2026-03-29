@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Shield, Home, Search, ArrowLeft } from 'lucide-react';
+import { Home, Search, ArrowLeft } from 'lucide-react';
+import VeritasLogo from '@/components/ui/VeritasLogo';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -14,7 +15,7 @@ export default function NotFound() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-3">
-              <Shield className="w-8 h-8 text-blue-600" />
+              <VeritasLogo size={32} />
               <h1 className="text-2xl font-bold text-gray-900">Veritas</h1>
             </Link>
             

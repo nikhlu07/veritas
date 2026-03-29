@@ -102,7 +102,7 @@ const handleApiError = (error: AxiosError): ApiError => {
   if (error.response) {
     // Server responded with error status
     apiError.status = error.response.status;
-    const errorData = error.response.data;
+    const errorData = error.response.data as any;
     
     // Handle different error response formats
     if (typeof errorData === 'string') {
@@ -116,7 +116,7 @@ const handleApiError = (error: AxiosError): ApiError => {
       apiError.message = error.response.statusText || error.message;
     }
     
-    apiError.details = errorData;
+    apiError.details = errorData as Record<string, unknown>;
   } else if (error.request) {
     // Request was made but no response received
     if (error.code === 'ECONNABORTED') {
@@ -253,9 +253,11 @@ export { DEFAULT_CONFIG };
 
 // Utility functions
 export const isValidBatchId = (batchId: string): boolean => {
-  // Batch IDs follow a pattern like VRT-2024-XXXXXX (3 letters, 4 digits, 6 digits)
-  const pattern = /^[A-Z]{3}-\d{4}-\d{6}$/;
-  return pattern.test(batchId);
+  // Accept any batch ID with at least one hyphen, made of alphanumeric+hyphen segments
+  // Real examples: COFFEE-2024-1001, SHIRT-ECO-2024-456, PHONE-REF-2024-789
+  if (!batchId || batchId.trim().length < 3) return false;
+  const pattern = /^[A-Z0-9]+(-[A-Z0-9]+)+$/i;
+  return pattern.test(batchId.trim());
 };
 
 export const formatApiError = (error: ApiError): string => {

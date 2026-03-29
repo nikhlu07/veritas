@@ -38,8 +38,8 @@ const QrScanner = dynamic(() => import('react-qr-barcode-scanner'), {
 
 const searchSchema = z.object({
   batchId: z.string()
-    .min(1, 'Batch ID is required')
-    .regex(/^[A-Z]{3}-\d{4}-\d{6}$/, 'Invalid batch ID format. Expected format: VRT-2024-123456'),
+    .min(3, 'Batch ID is required')
+    .regex(/^[A-Z0-9]+(-[A-Z0-9]+)+$/i, 'Invalid format — example: COFFEE-2024-1001'),
 });
 
 type SearchFormData = z.infer<typeof searchSchema>;
@@ -145,24 +145,7 @@ export default function VerifyPage() {
   };
 
   const handleSampleBatchId = () => {
-    setValue('batchId', 'VRT-2024-123456');
-  };
-
-  const formatBatchId = (value: string) => {
-    const cleaned = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-    
-    if (cleaned.length <= 3) {
-      return cleaned;
-    } else if (cleaned.length <= 7) {
-      return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
-    } else {
-      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 13)}`;
-    }
-  };
-
-  const handleBatchIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatBatchId(e.target.value);
-    setValue('batchId', formatted);
+    setValue('batchId', 'COFFEE-2024-1001');
   };
 
   const handleRecentVerificationClick = (batchId: string) => {
@@ -266,11 +249,9 @@ export default function VerifyPage() {
                         type="text"
                         id="batchId"
                         {...register('batchId')}
-                        onChange={handleBatchIdChange}
-                        className="w-full px-4 py-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-center"
-                        placeholder="VRT-2024-123456"
+                        className="w-full px-4 py-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-center uppercase"
+                        placeholder="COFFEE-2024-1001"
                         disabled={isSearching}
-                        maxLength={14}
                       />
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                         <Search className="w-6 h-6 text-gray-400" />
@@ -285,7 +266,7 @@ export default function VerifyPage() {
                     )}
                     
                     <div className="mt-3 text-sm text-gray-500">
-                      <p>Expected format: <span className="font-mono bg-gray-100 px-2 py-1 rounded">VRT-YYYY-XXXXXX</span></p>
+                      <p>Example: <span className="font-mono bg-gray-100 px-2 py-1 rounded">COFFEE-2024-1001</span></p>
                     </div>
                   </div>
 
@@ -314,7 +295,7 @@ export default function VerifyPage() {
                       className="w-full py-3 px-6 border-2 border-purple-200 text-purple-700 rounded-lg hover:border-purple-300 hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 transition-colors font-medium"
                       disabled={isSearching}
                     >
-                      Try Demo: VRT-2024-123456
+                      Try Demo: COFFEE-2024-1001
                     </button>
                   </div>
                 </form>

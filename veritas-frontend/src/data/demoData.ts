@@ -136,6 +136,156 @@ export const DEMO_VERIFICATION_RESULTS: { [key: string]: VerificationResponse['d
       claim_types: ["organic", "fair-trade", "carbon-neutral"],
       has_hcs_data: true
     }
+  },
+
+  "COFFEE-2024-1001": {
+    product: {
+      id: 2,
+      product_name: "Colombian Single Origin Coffee",
+      supplier_name: "Huila Mountain Growers Cooperative",
+      batch_id: "COFFEE-2024-1001",
+      description: "Shade-grown specialty coffee from the Huila region of Colombia, grown at 1,800m elevation. Notes of dark chocolate, caramel, and citrus.",
+      created_at: "2024-03-01T08:00:00Z"
+    },
+    claims: [
+      {
+        id: 4,
+        claim_type: "organic",
+        description: "100% Certified Organic by USDA NOP and Colombia's Biolatina. Grown without synthetic pesticides. Annual soil health audits conducted.",
+        product_id: 2,
+        hcs_transaction_id: "0.0.4847638@1709280000.100000001",
+        created_at: "2024-03-01T08:00:00Z"
+      },
+      {
+        id: 5,
+        claim_type: "fair-trade",
+        description: "Fair Trade USA certified #FT-2024-COL-0042. Farmers paid $2.10/lb vs $1.60 market rate. Co-op reinvests 25% of premium into community projects.",
+        product_id: 2,
+        hcs_transaction_id: "0.0.4847638@1709280001.200000002",
+        created_at: "2024-03-01T08:00:00Z"
+      },
+      {
+        id: 6,
+        claim_type: "carbon-neutral",
+        description: "Net-zero carbon certified by Carbon Trust. 1,200 trees planted in Huila in 2024 to offset all farm and shipping emissions.",
+        product_id: 2,
+        hcs_transaction_id: "0.0.4847638@1709280002.300000003",
+        created_at: "2024-03-01T08:00:00Z"
+      }
+    ],
+    qr_code: {
+      batchId: "COFFEE-2024-1001",
+      verificationData: {
+        verification_url: `${typeof window !== 'undefined' ? window.location.origin : 'https://veritas.example.com'}/verify/COFFEE-2024-1001`,
+        batch_id: "COFFEE-2024-1001"
+      }
+    },
+    summary: {
+      total_claims: 3,
+      verified_claims: 3,
+      claim_types: ["organic", "fair-trade", "carbon-neutral"],
+      has_hcs_data: true
+    }
+  },
+
+  "SHIRT-ECO-2024-456": {
+    product: {
+      id: 3,
+      product_name: "Organic Cotton Crew-Neck T-Shirt",
+      supplier_name: "Earthwear Collective",
+      batch_id: "SHIRT-ECO-2024-456",
+      description: "Classic crew-neck tee made from 100% GOTS-certified organic cotton grown in Gujarat, India. Dyed with low-impact, OEKO-TEX certified dyes.",
+      created_at: "2024-04-10T09:15:00Z"
+    },
+    claims: [
+      {
+        id: 7,
+        claim_type: "organic",
+        description: "GOTS (Global Organic Textile Standard) certified. Cotton grown without toxic pesticides or GMO seeds on certified organic farmland in Gujarat.",
+        product_id: 3,
+        hcs_transaction_id: "0.0.4847638@1712741700.100000007",
+        created_at: "2024-04-10T09:15:00Z"
+      },
+      {
+        id: 8,
+        claim_type: "fair-trade",
+        description: "Ethical labor certified by Fair Wear Foundation. Factory workers earn living wage. No child labor. Safe working conditions audited annually.",
+        product_id: 3,
+        hcs_transaction_id: "0.0.4847638@1712741701.200000008",
+        created_at: "2024-04-10T09:15:00Z"
+      },
+      {
+        id: 9,
+        claim_type: "recyclable",
+        description: "Take-back program available. Shirt is 100% mono-material (pure cotton) enabling full textile recycling. Packaging is FSC-certified paperboard.",
+        product_id: 3,
+        hcs_transaction_id: "0.0.4847638@1712741702.300000009",
+        created_at: "2024-04-10T09:15:00Z"
+      }
+    ],
+    qr_code: {
+      batchId: "SHIRT-ECO-2024-456",
+      verificationData: {
+        verification_url: `${typeof window !== 'undefined' ? window.location.origin : 'https://veritas.example.com'}/verify/SHIRT-ECO-2024-456`,
+        batch_id: "SHIRT-ECO-2024-456"
+      }
+    },
+    summary: {
+      total_claims: 3,
+      verified_claims: 3,
+      claim_types: ["organic", "fair-trade", "recyclable"],
+      has_hcs_data: true
+    }
+  },
+
+  "PHONE-REF-2024-789": {
+    product: {
+      id: 4,
+      product_name: "Refurbished Smartphone (Grade A)",
+      supplier_name: "ReNew Electronics Ltd.",
+      batch_id: "PHONE-REF-2024-789",
+      description: "Professionally refurbished smartphone restored to like-new condition. Battery replaced, all components tested. Comes with 12-month warranty.",
+      created_at: "2024-05-20T11:00:00Z"
+    },
+    claims: [
+      {
+        id: 10,
+        claim_type: "conflict-free",
+        description: "All minerals (tin, tantalum, tungsten, gold) sourced from RMAP-validated conflict-free smelters. Full supply chain audit completed in Q1 2024.",
+        product_id: 4,
+        hcs_transaction_id: "0.0.4847638@1716199200.100000010",
+        created_at: "2024-05-20T11:00:00Z"
+      },
+      {
+        id: 11,
+        claim_type: "sustainable",
+        description: "Refurbishment extends device lifespan by 3–5 years, reducing e-waste. 87% less carbon footprint vs. manufacturing new. Zero landfill waste policy.",
+        product_id: 4,
+        hcs_transaction_id: "0.0.4847638@1716199201.200000011",
+        created_at: "2024-05-20T11:00:00Z"
+      },
+      {
+        id: 12,
+        claim_type: "quality-assured",
+        description: "128-point quality inspection completed. Battery health >90%. Display, cameras, biometrics, and all ports tested and certified Grade A.",
+        product_id: 4,
+        hcs_transaction_id: "0.0.4847638@1716199202.300000012",
+        created_at: "2024-05-20T11:00:00Z"
+      }
+    ],
+    qr_code: {
+      batchId: "PHONE-REF-2024-789",
+      verificationData: {
+        verification_url: `${typeof window !== 'undefined' ? window.location.origin : 'https://veritas.example.com'}/verify/PHONE-REF-2024-789`,
+        batch_id: "PHONE-REF-2024-789"
+      }
+    },
+    summary: {
+      total_claims: 3,
+      verified_claims: 3,
+      claim_types: ["conflict-free", "sustainable", "quality-assured"],
+      has_hcs_data: true
+    }
   }
 };
 

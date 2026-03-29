@@ -1,517 +1,526 @@
 'use client';
 
 import Link from 'next/link';
-import { Shield, CheckCircle, QrCode, Zap, Users, Globe, ArrowRight, Leaf, Award, Lock } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ArrowRight, CheckCircle, QrCode, Zap, Lock, ChevronRight, ExternalLink, Leaf, Globe, BarChart3, Shield } from 'lucide-react';
+import VeritasLogo from '@/components/ui/VeritasLogo';
+
+/* ── Animated counter ───────────────────────── */
+function Counter({ end, suffix = '' }: { end: number; suffix?: string }) {
+  const [val, setVal] = useState(0);
+  const started = useRef(false);
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    let n = 0;
+    const step = end / 55;
+    const t = setInterval(() => {
+      n += step;
+      if (n >= end) { setVal(end); clearInterval(t); }
+      else setVal(Math.floor(n));
+    }, 18);
+    return () => clearInterval(t);
+  }, [end]);
+  return <>{val.toLocaleString()}{suffix}</>;
+}
+
+const HEDERA_TOPIC = '0.0.4847638';
 
 export default function Home() {
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 32);
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+
+  const goto = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-emerald-50/30">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50">
-        {/* Top gradient bar */}
-        <div className="h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-500"></div>
-        
-        {/* Main nav */}
-        <div className="bg-white/90 backdrop-blur-lg border-b border-slate-200/30 shadow-sm">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center space-x-4">
-                <img
-                  src="/logo.svg"
-                  alt="Veritas Logo"
-                  className="w-12 h-12"
-                />
-                <span className="text-xl font-semibold text-slate-900">Veritas</span>
-              </div>
-              <div className="hidden md:flex items-center space-x-8">
-                <button
-                  onClick={() => scrollToSection('how-it-works')}
-                  className="text-sm text-slate-600 hover:text-emerald-600 font-medium transition-colors relative group"
-                >
-                  How It Works
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-500 group-hover:w-full transition-all duration-200"></span>
-                </button>
-                <button
-                  onClick={() => scrollToSection('use-cases')}
-                  className="text-sm text-slate-600 hover:text-emerald-600 font-medium transition-colors relative group"
-                >
-                  Use Cases
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-500 group-hover:w-full transition-all duration-200"></span>
-                </button>
-                <Link
-                  href="/verify"
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-5 py-2.5 text-sm rounded-xl transition-all duration-200 font-medium shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-                >
-                  Launch App
-                </Link>
-              </div>
-              <div className="md:hidden">
-                <Link
-                  href="/verify"
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-4 py-2 text-sm rounded-xl transition-colors font-medium shadow-md"
-                >
-                  Launch
-                </Link>
-              </div>
-            </div>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflowX: 'hidden' }}>
+
+      {/* ── ambient glow layer ─ */}
+      <div aria-hidden style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+        {/* top centre emerald */}
+        <div style={{ position: 'absolute', top: -300, left: '50%', transform: 'translateX(-50%)', width: 900, height: 600, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(16,185,129,0.09) 0%, transparent 70%)', filter: 'blur(0px)' }} />
+        {/* bottom right teal */}
+        <div style={{ position: 'absolute', bottom: '10%', right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 65%)' }} />
+        {/* dot grid */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+      </div>
+
+      {/* ══════════════════════════════
+           NAV
+         ══════════════════════════════ */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        transition: 'all 0.3s ease',
+        background: scrolled ? 'rgba(8,12,14,0.88)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(18px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.07)' : 'none',
+      }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 62 }}>
+
+          {/* Brand */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+            <VeritasLogo size={28} />
+            <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700, fontSize: 17, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+              Veritas
+            </span>
+          </div>
+
+          {/* Links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+            {[['How it works', 'how-it-works'], ['Industries', 'use-cases']].map(([label, id]) => (
+              <button key={id} onClick={() => goto(id)} style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 14, fontWeight: 500, color: 'var(--text-muted)',
+                letterSpacing: '-0.01em', padding: 0,
+                transition: 'color 0.2s',
+              }}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)')}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'var(--text-muted)')}
+              >{label}</button>
+            ))}
+
+            <div style={{ width: 1, height: 18, background: 'rgba(255,255,255,0.10)' }} />
+
+            <Link href="/verify" style={{
+              fontSize: 14, fontWeight: 500, color: 'var(--text-secondary)',
+              textDecoration: 'none', letterSpacing: '-0.01em',
+              transition: 'color 0.2s'
+            }}
+              onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'var(--text-primary)')}
+              onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)')}
+            >Verify</Link>
+
+            <Link href="/submit" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '8px 18px', borderRadius: 10,
+              background: 'rgba(16,185,129,0.12)',
+              border: '1px solid rgba(16,185,129,0.28)',
+              color: '#10b981', fontSize: 14, fontWeight: 600,
+              textDecoration: 'none', letterSpacing: '-0.01em',
+              transition: 'all 0.2s',
+            }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = 'rgba(16,185,129,0.2)'; el.style.borderColor = 'rgba(16,185,129,0.5)'; }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = 'rgba(16,185,129,0.12)'; el.style.borderColor = 'rgba(16,185,129,0.28)'; }}
+            >
+              Submit claim
+            </Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-24 pb-32 px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
-        <div className="max-w-8xl mx-auto w-full">
-          {/* Massive Hero Card */}
-          <div className="relative glass-enhanced rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border border-white/50 overflow-hidden mx-2 lg:mx-4 animate-glow-pulse">
-            
-            {/* Epic background effects */}
-            <div className="absolute inset-0">
-              <div className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-emerald-300/30 via-teal-300/20 to-cyan-300/30 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute bottom-10 left-10 w-80 h-80 bg-gradient-to-tr from-violet-300/25 via-purple-300/20 to-pink-300/25 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-200/15 via-indigo-200/10 to-purple-200/15 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+      {/* ══════════════════════════════
+           HERO
+         ══════════════════════════════ */}
+      <section style={{ position: 'relative', zIndex: 1, paddingTop: 148, paddingBottom: 100, paddingInline: 28, maxWidth: 1120, margin: '0 auto' }}>
+
+        {/* eyebrow */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 10px rgba(16,185,129,0.6)' }} />
+          <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: '#10b981' }}>
+            Live on Hedera · Topic {HEDERA_TOPIC}
+          </span>
+        </div>
+
+        {/* headline */}
+        <h1 style={{
+          fontFamily: 'Space Grotesk, sans-serif',
+          fontSize: 'clamp(38px, 5.5vw, 76px)',
+          fontWeight: 800,
+          letterSpacing: '-0.04em',
+          lineHeight: 1.03,
+          maxWidth: 780,
+          marginBottom: 26,
+        }}>
+          <span style={{ color: 'var(--text-primary)' }}>Stop trusting.</span>
+          <br />
+          <span style={{
+            background: 'linear-gradient(90deg, #10b981 0%, #06b6d4 100%)',
+            backgroundClip: 'text', WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>Start verifying.</span>
+        </h1>
+
+        {/* sub */}
+        <p style={{
+          fontSize: 18, color: 'var(--text-secondary)',
+          maxWidth: 520, lineHeight: 1.7,
+          letterSpacing: '-0.01em',
+          marginBottom: 44,
+        }}>
+          Veritas puts sustainability claims on the Hedera blockchain — immutable, timestamped, and scannable by anyone in under 5 seconds.
+        </p>
+
+        {/* CTA row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 72 }}>
+          <Link href="/verify/COFFEE-2024-1001" className="btn-primary" style={{ fontSize: 15 }}>
+            <QrCode size={16} />
+            Try a live scan
+          </Link>
+          <Link href="/submit" className="btn-secondary" style={{ fontSize: 15 }}>
+            Submit your product
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+
+        {/* ── split: stats left / phone right ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 64, alignItems: 'center' }}>
+
+          {/* left — numbers */}
+          <div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px 40px' }}>
+              {[
+                { n: 1247, suf: '+', label: 'Products verified on-chain' },
+                { n: 98,   suf: '.5%', label: 'Average trust score' },
+                { n: 3,    suf: '-5s', label: 'Hedera finality time' },
+                { n: 52,   suf: 'B+',  label: 'Counterfeit market addressed' },
+              ].map(({ n, suf, label }) => (
+                <div key={label}>
+                  <div style={{
+                    fontFamily: 'Space Grotesk, sans-serif',
+                    fontSize: 'clamp(30px, 3vw, 44px)',
+                    fontWeight: 800,
+                    letterSpacing: '-0.035em',
+                    lineHeight: 1,
+                    background: 'linear-gradient(135deg, #e2fef2 0%, #10b981 60%)',
+                    backgroundClip: 'text', WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    marginBottom: 6,
+                  }}>
+                    <Counter end={n} suffix={suf} />
+                  </div>
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.4 }}>{label}</div>
+                </div>
+              ))}
             </div>
-            
-            <div className="relative grid lg:grid-cols-2 gap-16 p-12 lg:p-20 xl:p-24">
-              
-              {/* Epic Content */}
-              <div className="flex flex-col justify-center space-y-8 text-center lg:text-left">
-                
-                {/* Status Badge */}
-                <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-emerald-100/80 to-teal-100/80 rounded-full border border-emerald-200/60 shadow-lg backdrop-blur-sm w-fit mx-auto lg:mx-0">
-                  <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-space font-semibold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent">
-                    🚀 Live on Hedera Blockchain
-                  </span>
-                </div>
 
-                {/* Epic Headline */}
-                <div className="space-y-3">
-                  <h1 className="text-3xl lg:text-5xl xl:text-6xl font-space font-bold text-slate-900 leading-tight tracking-tight">
-                    Verify Product
-                  </h1>
-                  <h1 className="text-3xl lg:text-5xl xl:text-6xl font-space font-bold leading-tight tracking-tight animate-text-shimmer">
-                    Claims Instantly
-                  </h1>
-                </div>
-
-                {/* Epic Description */}
-                <p className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-outfit">
-                  Bridge the trust gap with blockchain-verified product authenticity. 
-                  Every claim is <span className="font-semibold text-emerald-600">immutable</span>, 
-                  <span className="font-semibold text-blue-600"> transparent</span>, and 
-                  <span className="font-semibold text-purple-600"> instantly verifiable</span>.
-                </p>
-
-                {/* Epic Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-6 pt-8 justify-center lg:justify-start">
-                  <Link
-                    href="/demo"
-                    className="group relative bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white px-8 py-4 text-base font-space font-semibold rounded-xl transition-all duration-300 hover:scale-105 text-center shadow-lg hover:shadow-emerald-500/25"
-                  >
-                    <span className="relative z-10">🎯 View Live Demo</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </Link>
-                  
-                  <Link
-                    href="/verify/COFFEE-2024-1001"
-                    className="group relative border-2 border-slate-300 hover:border-emerald-500 bg-white/80 backdrop-blur-sm text-slate-700 hover:text-emerald-600 px-8 py-4 text-base font-space font-semibold rounded-xl transition-all duration-300 hover:scale-105 text-center shadow-lg hover:shadow-xl"
-                  >
-                    <span className="relative z-10">🔍 Try Verification</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </Link>
-                </div>
-
-                {/* Trust Indicators */}
-                <div className="flex items-center justify-center lg:justify-start gap-6 pt-6">
-                  <div className="text-center">
-                    <div className="text-xl font-space font-bold text-slate-900">1,247+</div>
-                    <div className="text-xs text-slate-600 font-outfit">Products Verified</div>
-                  </div>
-                  <div className="w-px h-8 bg-slate-300"></div>
-                  <div className="text-center">
-                    <div className="text-xl font-space font-bold text-emerald-600">98.5%</div>
-                    <div className="text-xs text-slate-600 font-outfit">Trust Score</div>
-                  </div>
-                  <div className="w-px h-8 bg-slate-300"></div>
-                  <div className="text-center">
-                    <div className="text-xl font-space font-bold text-blue-600">24/7</div>
-                    <div className="text-xs text-slate-600 font-outfit">Verification</div>
-                  </div>
-                </div>
+            {/* hedera link */}
+            <div style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: 'var(--text-muted)' }}>
+                hashscan.io/testnet/topic/{HEDERA_TOPIC}
               </div>
+              <ExternalLink size={11} color="var(--text-muted)" />
+            </div>
+          </div>
 
-              {/* Modern Phone Mockup */}
-              <div className="flex items-center justify-center lg:justify-end">
-                <div className="relative w-80 h-[600px]">
-                  
-                  {/* Background Effects */}
-                  <div className="absolute inset-0">
-                    <div className="absolute top-10 right-10 w-64 h-64 bg-gradient-to-br from-emerald-300/40 to-teal-300/30 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute bottom-10 left-10 w-48 h-48 bg-gradient-to-tr from-violet-300/35 to-purple-300/25 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          {/* right — phone */}
+          <div className="animate-float" style={{ position: 'relative' }}>
+            {/* soft glow behind phone */}
+            <div style={{
+              position: 'absolute', top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 300, height: 400,
+              background: 'radial-gradient(ellipse, rgba(16,185,129,0.15) 0%, transparent 70%)',
+              filter: 'blur(30px)',
+              pointerEvents: 'none',
+            }} />
+
+            {/* phone frame */}
+            <div style={{
+              background: '#0d1214',
+              borderRadius: 40,
+              padding: 8,
+              boxShadow: '0 32px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.08)',
+              position: 'relative',
+            }}>
+              <div style={{ background: 'var(--bg-secondary)', borderRadius: 33, overflow: 'hidden', height: 500 }}>
+
+                {/* notch */}
+                <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', width: 110, height: 26, background: '#000', borderRadius: 18, zIndex: 5 }} />
+
+                {/* status bar */}
+                <div style={{ height: 52, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', paddingInline: 18, paddingBottom: 6, position: 'relative', zIndex: 4 }}>
+                  <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700, fontSize: 13, color: 'var(--text-primary)' }}>9:41</span>
+                  <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                    <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>●●●</span>
+                    <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>WiFi</span>
                   </div>
-                  
-                  {/* Phone Frame */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative group hover:scale-105 transition-all duration-500">
-                      
-                      {/* Shadow */}
-                      <div className="absolute inset-0 bg-black/20 rounded-[3rem] blur-2xl transform translate-y-4 translate-x-2 scale-105"></div>
-                      
-                      {/* Phone */}
-                      <div className="relative w-72 h-[580px] bg-gradient-to-br from-slate-900 to-slate-800 rounded-[3rem] p-2 shadow-2xl">
-                        
-                        {/* Screen */}
-                        <div className="w-full h-full bg-gradient-to-br from-white to-emerald-50/30 rounded-[2.5rem] overflow-hidden relative">
-                          
-                          {/* Dynamic Island */}
-                          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-32 h-8 bg-black rounded-full"></div>
-                          
-                          {/* Status Bar */}
-                          <div className="h-16 flex items-center justify-between px-6 pt-8 text-slate-900 font-space">
-                            <span className="font-bold">9:41</span>
-                            <div className="flex items-center gap-2">
-                              <span>📶</span>
-                              <span>🔋</span>
-                            </div>
-                          </div>
-                          
-                          {/* App Header */}
-                          <div className="px-6 py-4 border-b border-slate-100">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
-                                <span className="text-white text-sm font-bold">V</span>
-                              </div>
-                              <h3 className="text-lg font-space font-bold text-slate-900">Veritas</h3>
-                            </div>
-                          </div>
-                          
-                          {/* Content */}
-                          <div className="p-6 space-y-4">
-                            
-                            {/* Product Card */}
-                            <div className="bg-white/80 rounded-2xl p-4 shadow-lg border border-emerald-100">
-                              <div className="flex items-center gap-3 mb-3">
-                                <div className="w-12 h-12 rounded-xl overflow-hidden bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                                  <span className="text-white text-xl">☕</span>
-                                </div>
-                                <div className="flex-1">
-                                  <h4 className="font-space font-bold text-slate-900 text-sm">Organic Coffee</h4>
-                                  <p className="text-xs text-slate-500">COFFEE-2024-1001</p>
-                                </div>
-                                <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
-                                  <span className="text-white text-xs">✓</span>
-                                </div>
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-slate-600">Status</span>
-                                  <span className="font-bold text-emerald-600">VERIFIED</span>
-                                </div>
-                                <div className="w-full bg-slate-100 rounded-full h-1.5">
-                                  <div className="bg-gradient-to-r from-emerald-400 to-teal-400 h-1.5 rounded-full w-[98%]"></div>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Claims */}
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl">
-                                <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                <span className="text-sm text-slate-700">100% Organic</span>
-                                <span className="ml-auto text-emerald-600 text-xs">✓</span>
-                              </div>
-                              <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-xl">
-                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                <span className="text-sm text-slate-700">Fair Trade</span>
-                                <span className="ml-auto text-blue-600 text-xs">✓</span>
-                              </div>
-                            </div>
-                            
-                            {/* Scan Button */}
-                            <div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-center py-3 rounded-xl font-space font-bold text-sm">
-                              🔍 Scan New Product
-                            </div>
-                            
-                          </div>
-                          
-                          {/* Home Indicator */}
-                          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-slate-300 rounded-full"></div>
-                        </div>
+                </div>
+
+                {/* app header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingInline: 16, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <VeritasLogo size={22} />
+                  <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Veritas</span>
+                  <span style={{ marginLeft: 'auto', padding: '2px 9px', borderRadius: 20, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', background: 'rgba(16,185,129,0.14)', color: '#10b981', border: '1px solid rgba(16,185,129,0.25)' }}>Verified</span>
+                </div>
+
+                {/* card */}
+                <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 16, padding: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                      <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#f59e0b,#d97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>☕</div>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 12, color: 'var(--text-primary)' }}>Colombian Coffee</div>
+                        <div style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: 'JetBrains Mono, monospace' }}>COFFEE-2024-1001</div>
+                      </div>
+                      <div style={{ marginLeft: 'auto', width: 22, height: 22, borderRadius: '50%', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 10px rgba(16,185,129,0.5)' }}>
+                        <CheckCircle size={12} color="#fff" />
                       </div>
                     </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                      <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>Verification score</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: '#10b981' }}>98.5%</span>
+                    </div>
+                    <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2 }}>
+                      <div style={{ width: '98.5%', height: '100%', background: 'linear-gradient(90deg,#10b981,#06b6d4)', borderRadius: 2 }} />
+                    </div>
+                  </div>
+
+                  {/* claims */}
+                  {[
+                    { label: '100% Organic Certified', icon: <Leaf size={10} />, c: '#10b981' },
+                    { label: 'Fair Trade USA #FT-2024', icon: <CheckCircle size={10} />, c: '#06b6d4' },
+                    { label: 'Carbon Neutral', icon: <Globe size={10} />, c: '#8b5cf6' },
+                  ].map(({ label, icon, c }) => (
+                    <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 10 }}>
+                      <span style={{ color: c }}>{icon}</span>
+                      <span style={{ fontSize: 11, color: 'var(--text-secondary)', flex: 1 }}>{label}</span>
+                      <Lock size={9} color={c} />
+                    </div>
+                  ))}
+
+                  <div style={{ background: 'linear-gradient(90deg,#10b981,#0ea5e9)', borderRadius: 12, padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#fff', fontWeight: 700, fontSize: 12 }}>
+                    <QrCode size={13} /> Scan New Product
                   </div>
                 </div>
+
+                {/* home bar */}
+                <div style={{ position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)', width: 100, height: 3, background: 'rgba(255,255,255,0.15)', borderRadius: 2 }} />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Trust Gap Section */}
-      <section className="py-16 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl lg:text-3xl font-light text-slate-900 mb-4">
-              The Trust Gap in 
-              <span className="font-medium text-emerald-600"> Sustainability</span>
+      {/* ══════════════════════════════
+           PROBLEM → SOLUTION
+         ══════════════════════════════ */}
+      <section style={{ position: 'relative', zIndex: 1, paddingBlock: 100, paddingInline: 28, maxWidth: 1120, margin: '0 auto' }}>
+
+        {/* divider */}
+        <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.3), transparent)', marginBottom: 80 }} />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+
+          {/* problem */}
+          <div style={{ padding: 40, borderRadius: 20, background: 'rgba(239,68,68,0.04)', border: '1px solid rgba(239,68,68,0.14)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: -60, right: -60, width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle,rgba(239,68,68,0.08),transparent 70%)' }} />
+            <div style={{ fontSize: 34, marginBottom: 20 }}>❓</div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: '#ef4444', marginBottom: 10 }}>The problem</div>
+            <h2 style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 700, fontSize: 24, letterSpacing: '-0.025em', color: 'var(--text-primary)', marginBottom: 12, lineHeight: 1.2 }}>
+              73% of consumers can't verify a single sustainability claim.
             </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto text-base leading-relaxed">
-              Consumers struggle to verify sustainability claims, leading to widespread 
-              greenwashing and broken trust between brands and buyers.
+            <p style={{ fontSize: 15, color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: 20 }}>
+              "Organic", "Fair Trade", "Carbon Neutral" — these words live only in marketing, with nothing on chain to back them up.
             </p>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {['Greenwashing is rampant', 'No public audit trail', 'Consumers have no recourse'].map(t => (
+                <li key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-muted)' }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#ef4444', flexShrink: 0 }} />
+                  {t}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {/* Problem */}
-            <div className="relative bg-white/70 backdrop-blur-sm border border-red-100 rounded-2xl p-6 overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-red-100/30 to-orange-100/30 rounded-full blur-xl"></div>
-              <div className="relative text-center space-y-4">
-                <div className="w-16 h-16 rounded-2xl mx-auto shadow-lg bg-gradient-to-br from-red-400 to-orange-500 flex items-center justify-center">
-                  <span className="text-white text-2xl">❓</span>
-                </div>
-                <h3 className="text-lg font-medium text-slate-900">Unverified Claims</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Without verification, sustainability claims are just marketing promises 
-                  that consumers can't trust or validate.
-                </p>
-              </div>
+          {/* solution */}
+          <div style={{ padding: 40, borderRadius: 20, background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.18)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: -60, right: -60, width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle,rgba(16,185,129,0.10),transparent 70%)' }} />
+            <div style={{ marginBottom: 20 }}>
+              <Shield size={32} color="#10b981" strokeWidth={1.5} />
             </div>
-
-            {/* Solution */}
-            <div className="relative bg-white/70 backdrop-blur-sm border border-emerald-100 rounded-2xl p-6 overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-100/40 to-teal-100/40 rounded-full blur-xl"></div>
-              <div className="relative text-center space-y-4">
-                <div className="w-16 h-16 rounded-2xl mx-auto shadow-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
-                  <span className="text-white text-2xl">🔒</span>
-                </div>
-                <h3 className="text-lg font-medium text-slate-900">Blockchain Verified</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Every claim is immutably recorded on Hedera, creating transparent, 
-                  verifiable proof that builds genuine trust.
-                </p>
-              </div>
-            </div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: '#10b981', marginBottom: 10 }}>The fix</div>
+            <h2 style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 700, fontSize: 24, letterSpacing: '-0.025em', color: 'var(--text-primary)', marginBottom: 12, lineHeight: 1.2 }}>
+              Immutable proof locked on Hedera, readable by anyone.
+            </h2>
+            <p style={{ fontSize: 15, color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: 20 }}>
+              Every claim gets hashed, timestamped, and stored on-chain via Hedera Consensus Service. Then surfaced via a QR code on the product itself.
+            </p>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {['Tamper-proof blockchain record', 'QR links to verified proof', '3-5 second on-chain finality'].map(t => (
+                <li key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-secondary)' }}>
+                  <CheckCircle size={13} color="#10b981" style={{ flexShrink: 0 }} />
+                  {t}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-16 px-4 sm:px-6 bg-white/50">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl lg:text-3xl font-light text-slate-900 mb-4">
-              How It Works
+      {/* ══════════════════════════════
+           HOW IT WORKS
+         ══════════════════════════════ */}
+      <section id="how-it-works" style={{ position: 'relative', zIndex: 1, paddingBlock: 100, paddingInline: 28, maxWidth: 1120, margin: '0 auto' }}>
+
+        <div style={{ marginBottom: 56 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: '#10b981', marginBottom: 10 }}>Process</div>
+          <h2 style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 800, fontSize: 'clamp(28px,3.5vw,46px)', letterSpacing: '-0.035em', color: 'var(--text-primary)', maxWidth: 540, lineHeight: 1.1 }}>
+            Three steps from claim to consumer trust
+          </h2>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+          {[
+            { num: '01', icon: '📋', title: 'Submit', sub: 'Brands', desc: 'Fill in product details and sustainability claims with supporting evidence through the dashboard.', color: '#6366f1' },
+            { num: '02', icon: '⛓️', title: 'Anchor', sub: 'Hedera HCS', desc: 'Each claim is hashed and posted to Hedera Consensus Service — immutable, timestamped, public.', color: '#10b981' },
+            { num: '03', icon: '📱', title: 'Verify', sub: 'Anyone', desc: 'Scan the QR code on the packaging. The app fetches and displays the on-chain record in real time.', color: '#0ea5e9' },
+          ].map(({ num, icon, title, sub, desc, color }) => (
+            <div key={num} className="card" style={{ padding: 32, borderColor: `${color}22`, position: 'relative', overflow: 'hidden' }}>
+              {/* watermark */}
+              <div style={{ position: 'absolute', right: -8, top: -16, fontFamily: 'Space Grotesk,sans-serif', fontWeight: 900, fontSize: 80, color: 'rgba(255,255,255,0.03)', lineHeight: 1, userSelect: 'none', letterSpacing: '-0.05em' }}>{num}</div>
+
+              <div style={{ fontSize: 28, marginBottom: 20 }}>{icon}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color, marginBottom: 6 }}>Step {num} · {sub}</div>
+              <h3 style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 700, fontSize: 20, letterSpacing: '-0.02em', color: 'var(--text-primary)', marginBottom: 10 }}>{title}</h3>
+              <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.7 }}>{desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 40 }}>
+          <Link href="/submit" className="btn-primary" style={{ fontSize: 14 }}>
+            Get started
+            <ArrowRight size={15} />
+          </Link>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════
+           INDUSTRIES
+         ══════════════════════════════ */}
+      <section id="use-cases" style={{ position: 'relative', zIndex: 1, paddingBlock: 100, paddingInline: 28, maxWidth: 1120, margin: '0 auto' }}>
+
+        {/* section header — intentionally left-aligned unlike the rest, feels human */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: '#10b981', marginBottom: 10 }}>Industries</div>
+            <h2 style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 800, fontSize: 'clamp(26px,3vw,42px)', letterSpacing: '-0.035em', color: 'var(--text-primary)', lineHeight: 1.1 }}>
+              Built for every product,<br />every shelf.
             </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto text-base leading-relaxed">
-              Three simple steps to create transparent, verifiable trust between brands and consumers.
+          </div>
+          <Link href="/submit" style={{ textDecoration: 'none', fontSize: 13, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+            See all use cases <ChevronRight size={14} />
+          </Link>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16 }}>
+          {[
+            { emoji: '☕', title: 'Food & Beverage', desc: 'Organic certifications, origin tracking, fair trade proof — all on-chain before the beans hit the shelf.', tags: ['Organic', 'Fair Trade', 'Origin'], accent: '#f59e0b' },
+            { emoji: '👕', title: 'Fashion & Apparel', desc: 'Ethical labor, GOTS-certified materials, and recycled content — verified before the tag is sewn in.', tags: ['Ethical Labor', 'GOTS', 'Recycled'], accent: '#ec4899' },
+            { emoji: '📱', title: 'Electronics', desc: 'Conflict-free minerals, energy ratings, e-waste programs — with a chain of custody that\'s fully auditable.', tags: ['Conflict-Free', 'Energy Star', 'E-Waste'], accent: '#06b6d4' },
+            { emoji: '💊', title: 'Pharmaceuticals', desc: 'Cold chain data, batch authenticity, expiration verification — patient safety baked into every package.', tags: ['Cold Chain', 'Authentic', 'Expiry'], accent: '#8b5cf6' },
+          ].map(({ emoji, title, desc, tags, accent }) => (
+            <div key={title} className="card" style={{ padding: 28, borderColor: `${accent}18`, cursor: 'default' }}>
+              <div style={{ fontSize: 26, marginBottom: 14 }}>{emoji}</div>
+              <h3 style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 700, fontSize: 17, letterSpacing: '-0.02em', color: 'var(--text-primary)', marginBottom: 8 }}>{title}</h3>
+              <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: 16 }}>{desc}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {tags.map(t => (
+                  <span key={t} style={{ padding: '3px 10px', borderRadius: 100, fontSize: 11, fontWeight: 600, background: `${accent}12`, border: `1px solid ${accent}28`, color: accent }}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══════════════════════════════
+           CTA
+         ══════════════════════════════ */}
+      <section style={{ position: 'relative', zIndex: 1, paddingBlock: 80, paddingInline: 28, maxWidth: 1120, margin: '0 auto' }}>
+        <div style={{
+          borderRadius: 24,
+          background: 'linear-gradient(135deg,rgba(16,185,129,0.10) 0%,rgba(6,182,212,0.07) 100%)',
+          border: '1px solid rgba(16,185,129,0.18)',
+          padding: 'clamp(40px,6vw,72px)',
+          display: 'grid',
+          gridTemplateColumns: '1fr auto',
+          gap: 40,
+          alignItems: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          {/* glow */}
+          <div aria-hidden style={{ position: 'absolute', bottom: -80, right: -80, width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle,rgba(16,185,129,0.12),transparent 70%)', filter: 'blur(20px)', pointerEvents: 'none' }} />
+
+          <div style={{ position: 'relative' }}>
+            <h2 style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 800, fontSize: 'clamp(24px,3vw,40px)', letterSpacing: '-0.035em', color: 'var(--text-primary)', marginBottom: 12, lineHeight: 1.15 }}>
+              Ready to build<br />
+              <span style={{ background: 'linear-gradient(90deg,#10b981,#06b6d4)', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>authentic trust?</span>
+            </h2>
+            <p style={{ fontSize: 15, color: 'var(--text-secondary)', maxWidth: 400, lineHeight: 1.6 }}>
+              Submit your first product in under 2 minutes. Or scan one of our demo products to see the full verification flow.
             </p>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Step 1 */}
-            <div className="text-center group">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 rounded-2xl mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
-                  <span className="text-white text-3xl">📄</span>
-                </div>
-                {/* Flow arrow */}
-                <div className="hidden md:block absolute top-10 -right-4 w-8 h-0.5 bg-gradient-to-r from-emerald-300 to-blue-300"></div>
-                <div className="hidden md:block absolute top-10 -right-2 w-0 h-0 border-l-4 border-l-blue-300 border-t-2 border-b-2 border-t-transparent border-b-transparent"></div>
-              </div>
-              <h3 className="text-lg font-medium text-slate-900 mb-3">Submit Claims</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Brands submit product information and sustainability claims with supporting evidence.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="text-center group">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 rounded-2xl mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
-                  <span className="text-white text-3xl">⛓️</span>
-                </div>
-                {/* Flow arrow */}
-                <div className="hidden md:block absolute top-10 -right-4 w-8 h-0.5 bg-gradient-to-r from-blue-300 to-purple-300"></div>
-                <div className="hidden md:block absolute top-10 -right-2 w-0 h-0 border-l-4 border-l-purple-300 border-t-2 border-b-2 border-t-transparent border-b-transparent"></div>
-              </div>
-              <h3 className="text-lg font-medium text-slate-900 mb-3">Blockchain Recording</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Claims are immutably recorded on Hedera, creating transparent, unalterable proof.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="text-center group">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 rounded-2xl mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
-                  <span className="text-white text-3xl">📱</span>
-                </div>
-              </div>
-              <h3 className="text-lg font-medium text-slate-900 mb-3">Instant Verification</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Consumers scan QR codes to instantly verify product authenticity and claims.
-              </p>
+            <div style={{ marginTop: 20, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {[
+                { label: '☕ Coffee', id: 'COFFEE-2024-1001' },
+                { label: '👕 T-Shirt', id: 'SHIRT-ECO-2024-456' },
+                { label: '📱 Phone', id: 'PHONE-REF-2024-789' },
+              ].map(({ label, id }) => (
+                <Link key={id} href={`/verify/${id}`} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '5px 12px', borderRadius: 7,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  fontSize: 11, color: 'var(--text-muted)',
+                  textDecoration: 'none', fontFamily: 'JetBrains Mono,monospace',
+                  letterSpacing: '0.01em', transition: 'all 0.2s',
+                }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(16,185,129,0.3)'; el.style.color = '#10b981'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(255,255,255,0.08)'; el.style.color = 'var(--text-muted)'; }}
+                >
+                  {label} · {id} <ChevronRight size={10} />
+                </Link>
+              ))}
             </div>
           </div>
 
-          <div className="text-center mt-10">
-            <Link
-              href="/submit"
-              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02] text-sm"
-            >
-              Get Started
-              <ArrowRight className="w-4 h-4" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flexShrink: 0, position: 'relative' }}>
+            <Link href="/submit" className="btn-primary" style={{ fontSize: 15 }}>
+              Submit a product
+              <ArrowRight size={15} />
+            </Link>
+            <Link href="/verify" className="btn-secondary" style={{ fontSize: 14 }}>
+              Verify a product
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Use Cases Section */}
-      <section id="use-cases" className="py-16 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          {/* White header section */}
-          <div className="text-center mb-16 bg-white rounded-3xl p-12 shadow-lg border border-slate-100 mx-4 lg:mx-8">
-            <h2 className="text-2xl lg:text-3xl font-light text-slate-900 mb-4">
-              Perfect for Every Industry
-            </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto text-base leading-relaxed">
-              From fashion to food, Veritas helps brands build authentic trust 
-              and empowers consumers to make informed choices.
-            </p>
+      {/* ══════════════════════════════
+           FOOTER
+         ══════════════════════════════ */}
+      <footer style={{ position: 'relative', zIndex: 1, borderTop: '1px solid rgba(255,255,255,0.06)', paddingBlock: 36, paddingInline: 28 }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+
+          {/* brand — same logo as nav */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <VeritasLogo size={22} />
+            <span style={{ fontFamily: 'Space Grotesk,sans-serif', fontWeight: 700, fontSize: 15, letterSpacing: '-0.025em', color: 'var(--text-secondary)' }}>Veritas</span>
           </div>
 
-          {/* Greenish background container for cards */}
-          <div className="bg-gradient-to-br from-emerald-50/30 to-green-50/20 rounded-3xl p-10 lg:p-12 border border-emerald-100/20 mx-4 lg:mx-8">
-            <div className="grid md:grid-cols-3 gap-6">
-              {/* Fashion */}
-              <div className="relative bg-white/80 backdrop-blur-sm border border-white/40 rounded-2xl p-6 overflow-hidden group hover:shadow-lg transition-all duration-300">
-                <div className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-br from-pink-100/20 to-rose-100/20 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="relative">
-                  {/* Fashion product image */}
-                  <div className="w-16 h-16 rounded-xl mb-4 shadow-lg bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
-                    <span className="text-white text-2xl">👕</span>
-                  </div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-3">Fashion & Apparel</h3>
-                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                    Verify ethical labor, sustainable materials, and fair trade certifications.
-                  </p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>
-                      Organic cotton verification
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>
-                      Fair labor practices
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>
-                      Recycled materials
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div style={{ display: 'flex', gap: 24 }}>
+            {[['Verify', '/verify'], ['Submit', '/submit'], ['Demo', '/demo']].map(([l, h]) => (
+              <Link key={h} href={h} style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => ((e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)')}
+                onMouseLeave={e => ((e.currentTarget as HTMLElement).style.color = 'var(--text-muted)')}>{l}</Link>
+            ))}
+          </div>
 
-              {/* Food */}
-              <div className="relative bg-white/80 backdrop-blur-sm border border-white/40 rounded-2xl p-6 overflow-hidden group hover:shadow-lg transition-all duration-300">
-                <div className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-br from-green-100/20 to-emerald-100/20 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="relative">
-                  {/* Food product image */}
-                  <div className="w-16 h-16 rounded-xl mb-4 shadow-lg bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
-                    <span className="text-white text-2xl">🍎</span>
-                  </div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-3">Food & Beverage</h3>
-                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                    Authenticate organic certifications, origin tracking, and quality standards.
-                  </p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                      Organic certification
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                      Farm-to-table tracking
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                      Quality assurance
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Electronics */}
-              <div className="relative bg-white/80 backdrop-blur-sm border border-white/40 rounded-2xl p-6 overflow-hidden group hover:shadow-lg transition-all duration-300">
-                <div className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-br from-blue-100/20 to-cyan-100/20 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500"></div>
-                <div className="relative">
-                  {/* Electronics product image */}
-                  <div className="w-16 h-16 rounded-xl mb-4 shadow-lg bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center">
-                    <span className="text-white text-2xl">📱</span>
-                  </div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-3">Electronics</h3>
-                  <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                    Verify conflict-free minerals, energy efficiency, and recycling programs.
-                  </p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                      Conflict-free minerals
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                      Energy efficiency
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                      E-waste programs
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+            Built on Hedera · MIT License
           </div>
         </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-16 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-3xl border border-emerald-100 p-8 lg:p-12 text-center">
-            <h2 className="text-2xl lg:text-3xl font-light text-slate-900 mb-4">
-              Ready to Build 
-              <span className="font-medium text-emerald-600"> Authentic Trust</span>?
-            </h2>
-            <p className="text-base text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Join the transparency revolution. Start verifying your products today 
-              and give your customers the confidence they deserve.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="/submit"
-                className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02] text-sm"
-              >
-                Submit Product
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/verify"
-                className="inline-flex items-center justify-center gap-2 border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-xl font-medium transition-all duration-200 text-sm"
-              >
-                Try Verification
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      </footer>
     </div>
   );
 }

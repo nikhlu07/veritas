@@ -95,8 +95,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
-        <meta name="theme-color" content="#2563eb" />
-        <meta name="color-scheme" content="light" />
+        <meta name="theme-color" content="#080c0e" />
+        <meta name="color-scheme" content="dark" />
 
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -108,7 +108,8 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body
-        className={`${lufga.variable} font-lufga antialiased`}
+        className={`${lufga.variable} antialiased`}
+        style={{ background: '#080c0e', color: '#f0f6f3' }}
       >
         <ErrorBoundary>
           <NetworkStatus />
